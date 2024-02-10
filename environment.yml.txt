@@ -1,0 +1,11 @@
+name: chain_mode_fluxonium
+channels:
+  - conda-forge
+dependencies:
+  - scqubits
+  - cupy
+  - qutip
+  - jupyterlab
+  - ipympl
+  - tqdm
+  - pip

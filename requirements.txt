@@ -1,0 +1,6 @@
+scqubits
+cupy
+qutip
+jupyterlab
+ipympl
+tqdm
