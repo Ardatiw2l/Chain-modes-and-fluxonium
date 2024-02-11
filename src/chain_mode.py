@@ -12,6 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.style as mplstyle
 import os 
+from _interactive_ploting_functions import InteractiveScatterPlot_dispestion
 
 # Get the directory where the current script resides
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -218,3 +219,40 @@ class ChainMode(scq.Oscillator):
         fig.tight_layout()
         plt.show()
         return fig, mode_indices, coupling_strengths, mode_frequencies
+
+
+    def plot_interactive_dispersion_relation(self):
+        """
+        Plot the dispersion relation and coupling strength of the chain modes to the fluxonium.
+        Automatically uses the number of chain junctions as the range for the mode index (rho).
+        """
+        # Generate an array of mode indices
+        original_chain_mode_index = self.chain_mode_index
+        mode_indices = np.arange(1, self.number_of_chain_junctions + 1)
+
+        # Preallocate arrays for coupling strengths and frequencies
+        coupling_strengths = np.zeros_like(mode_indices, dtype=float)
+        mode_frequencies = np.zeros_like(mode_indices, dtype=float)
+
+        # Calculate coupling strength and frequency for each mode
+        for i, mode_index in enumerate(mode_indices):
+            self.chain_mode_index = mode_index
+            coupling_strengths[i] = self.coupling_to_fluxonium()
+            mode_frequencies[i] = self.get_frequency_from_theory()
+        self.chain_mode_index = original_chain_mode_index
+
+        # Plotting setup
+        
+        plot = InteractiveScatterPlot_dispestion(mode_indices, mode_frequencies, coupling_strengths)
+
+        plot.ax.set_yscale('log')
+        plot.ax.set_xscale('log')
+
+        # Plotting the mode frequency
+        plot.ax.set_ylabel(r'Mode Frequency ($\omega_\rho$) in GHz')
+        plot.ax.set_xlabel(r'Mode Index ($\rho$)')
+        plot.ax.grid(True)
+
+        # Adjust layout
+        plot.fig.tight_layout()
+        
